@@ -22,31 +22,44 @@ npm run build
 npm run preview
 ```
 
+## Erros comuns
+- CORS ao abrir `index.html` direto (file://): execute via servidor.
+  - Desenvolvimento:
+    ```powershell
+    npm run dev
+    ```
+  - Após build:
+    ```powershell
+    npm run preview
+    ```
+  Não abra o arquivo `index.html` clicando duas vezes; acesse pelo endereço `http://localhost:5173` (ou o exibido no terminal).
+
 ## Sistema de Assets
-- Arquivo: `public/assets/manifest.json`
+- Arquivo: `public/assets/manifest.json` (gerado a partir da pasta raiz `assets/`)
 - Formato:
 ```json
 {
-  "player": { "type": "gif", "src": "/assets/player.gif", "frameRate": 12 },
-  "enemy_cactus": { "type": "image", "src": "/assets/cactus.png" },
-  "collectible": { "type": "image", "src": "/assets/coin.png" },
-  "background": { "type": "image", "src": "/assets/background.png" }
+  "bg1": { "type": "image", "src": "/assets/backgrounds/bg1.png" },
+  "bg2": { "type": "image", "src": "/assets/backgrounds/bg2.png" },
+  "player_run": { "type": "gif", "src": "/assets/sprites/corrida.gif", "frameRate": 12 },
+  "player_jump": { "type": "gif", "src": "/assets/sprites/pulo.gif", "frameRate": 12 },
+  "player_dead": { "type": "image", "src": "/assets/sprites/morte.png" },
+  "enemy_larva": { "type": "gif", "src": "/assets/enemies/larva.gif" },
+  "enemy_percevejo": { "type": "gif", "src": "/assets/enemies/percevejo.gif" },
+  "enemy_mosca": { "type": "gif", "src": "/assets/enemies/mosca.gif" },
+  "col_certificado": { "type": "image", "src": "/assets/collectibles/certificado.png" },
+  "col_soja": { "type": "gif", "src": "/assets/collectibles/soja_supreme.gif" }
 }
 ```
-- Tipos suportados: `image` (png/jpg) e `gif`.
+- Tipos suportados: `image` (png/jpg) e `gif`. Fonte TTF é carregada via `this.load.font`.
 - Para GIF, os frames são decodificados com `gifuct-js` e criamos uma animação reutilizável.
-- Substitua os arquivos em `public/assets/` e ajuste os caminhos no `manifest.json`.
+- Os arquivos da pasta raiz `assets/` são copiados automaticamente para `public/assets/` ao rodar `npm run dev`/`npm run build`.
 
 ## Cenas
 - `MenuScene`: botões Iniciar Jogo e Pontuações.
-- `GameScene`: mecânica do Dino (pular, obstáculos, coletáveis, pontuação e Game Over).
+- `GameScene`: mecânica do Dino (pular, obstáculos, coletáveis raros/comuns, pontuação e Game Over) com fundo alternando bg1/bg2.
 - `ScoreScene`: exibe pontuações (localStorage).
 
 ## Observações
-- Assets padrão no manifest são placeholders. Se não existir o arquivo, o jogo usa formas simples (retângulos) temporariamente.
-- Para personalizar: substitua `player`, `enemy_cactus`, `collectible`, `background` no `manifest.json`.
-
-## Próximos passos (sugestão)
-- Adicionar ciclo dia/noite e nuvens.
-- Animação de agachar do jogador; inimigos voadores.
-- Tabela de pontuações persistida em backend (se necessário).
+- Se algum asset não existir, o jogo usa formas simples (retângulos) temporariamente.
+- Para personalizar: edite o `manifest.json` e substitua arquivos em `assets/`.

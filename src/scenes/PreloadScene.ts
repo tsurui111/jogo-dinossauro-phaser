@@ -26,7 +26,11 @@ export class PreloadScene extends Phaser.Scene {
       this.progressBox.destroy();
     });
 
+    // Imagens do manifest
     assetManager.preloadStatic(this);
+    // Fonte TTF (Minecraft.ttf)
+    // Requer Phaser >= 3.87
+    this.load.font('Minecraft', '/assets/fonts/Minecraft.ttf', 'truetype');
   }
 
   async create() {
