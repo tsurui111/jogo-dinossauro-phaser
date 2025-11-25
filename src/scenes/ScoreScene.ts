@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-const HS_KEY = 'dino_highscores';
+const HS_KEY = 'ameliosfarm_highscores';
 
 type ScoreItem = { score: number; when: number };
 
@@ -9,12 +9,12 @@ export class ScoreScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-    this.cameras.main.setBackgroundColor('#fafafa');
+    this.cameras.main.setBackgroundColor('#87ceeb');
     this.add.text(width/2, 80, 'Pontuações', { fontFamily: 'Minecraft, Arial', fontSize: '42px', color: '#222' }).setOrigin(0.5);
 
     const hs = this.getScores();
     if (hs.length === 0) {
-      this.add.text(width/2, height/2, 'Sem pontuações ainda', { fontFamily: 'Arial', fontSize: '24px', color: '#666' }).setOrigin(0.5);
+      this.add.text(width/2, height/2, 'Sem pontuações ainda', { fontFamily: 'Arial', fontSize: '24px', color: '#224' }).setOrigin(0.5);
     } else {
       hs.slice(0, 5).forEach((s, i) => {
         const date = new Date(s.when).toLocaleString();
@@ -40,7 +40,6 @@ export class ScoreScene extends Phaser.Scene {
 }
 
 export function addHighScore(score: number) {
-  const HS_KEY = 'dino_highscores';
   try {
     const raw = localStorage.getItem(HS_KEY);
     const arr = raw ? (JSON.parse(raw) as ScoreItem[]) : [];

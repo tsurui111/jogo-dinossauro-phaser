@@ -1,6 +1,6 @@
-# Dino Clone (Phaser + Vite + TypeScript)
+# Amelio's Farm (Phaser + Vite + TypeScript)
 
-Jogo inspirado no dinossauro do Google, com tela inicial (Iniciar Jogo, Pontuações), sistema de assets via manifest e suporte a GIFs para o jogador/inimigos/background.
+Jogo estilo Dino do Google com tela inicial (Iniciar Jogo, Pontuações) e sistema de assets via manifest. Todos os assets são estáticos (sem animações em GIF). O jogo preenche toda a área disponível do navegador.
 
 ## Requisitos
 - Node.js 18+ recomendado
@@ -34,30 +34,33 @@ npm run preview
     ```
   Não abra o arquivo `index.html` clicando duas vezes; acesse pelo endereço `http://localhost:5173` (ou o exibido no terminal).
 
+## Tela Cheia
+- O jogo usa `Phaser.Scale.RESIZE` e CSS para ocupar 100% da viewport.
+- Ajustes de layout usam `this.scale.width/height`; evite abrir direto via `file://`.
+
 ## Sistema de Assets
 - Arquivo: `public/assets/manifest.json` (gerado a partir da pasta raiz `assets/`)
-- Formato:
+- Formato (estático):
 ```json
 {
   "bg1": { "type": "image", "src": "/assets/backgrounds/bg1.png" },
   "bg2": { "type": "image", "src": "/assets/backgrounds/bg2.png" },
-  "player_run": { "type": "gif", "src": "/assets/sprites/corrida.gif", "frameRate": 12 },
-  "player_jump": { "type": "gif", "src": "/assets/sprites/pulo.gif", "frameRate": 12 },
+  "player_run": { "type": "image", "src": "/assets/sprites/corrida.gif" },
+  "player_jump": { "type": "image", "src": "/assets/sprites/pulo.gif" },
   "player_dead": { "type": "image", "src": "/assets/sprites/morte.png" },
-  "enemy_larva": { "type": "gif", "src": "/assets/enemies/larva.gif" },
-  "enemy_percevejo": { "type": "gif", "src": "/assets/enemies/percevejo.gif" },
-  "enemy_mosca": { "type": "gif", "src": "/assets/enemies/mosca.gif" },
+  "enemy_larva": { "type": "image", "src": "/assets/enemies/larva.gif" },
+  "enemy_percevejo": { "type": "image", "src": "/assets/enemies/percevejo.gif" },
+  "enemy_mosca": { "type": "image", "src": "/assets/enemies/mosca.gif" },
   "col_certificado": { "type": "image", "src": "/assets/collectibles/certificado.png" },
-  "col_soja": { "type": "gif", "src": "/assets/collectibles/soja_supreme.gif" }
+  "col_soja": { "type": "image", "src": "/assets/collectibles/soja_supreme.gif" }
 }
 ```
-- Tipos suportados: `image` (png/jpg) e `gif`. Fonte TTF é carregada via `this.load.font`.
-- Para GIF, os frames são decodificados com `gifuct-js` e criamos uma animação reutilizável.
-- Os arquivos da pasta raiz `assets/` são copiados automaticamente para `public/assets/` ao rodar `npm run dev`/`npm run build`.
+- Tipos suportados: apenas `image` (inclui PNG/JPG/GIF exibido como frame estático).
+- Os arquivos da pasta `assets/` são copiados automaticamente para `public/assets/` ao rodar `npm run dev`/`npm run build`.
 
 ## Cenas
 - `MenuScene`: botões Iniciar Jogo e Pontuações.
-- `GameScene`: mecânica do Dino (pular, obstáculos, coletáveis raros/comuns, pontuação e Game Over) com fundo alternando bg1/bg2.
+- `GameScene`: mecânica básica (pulo, obstáculos, coletáveis raros/comuns, pontuação e Game Over) com fundo alternando bg1/bg2.
 - `ScoreScene`: exibe pontuações (localStorage).
 
 ## Observações

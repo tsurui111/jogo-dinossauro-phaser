@@ -13,7 +13,7 @@ export class MenuScene extends Phaser.Scene {
       const sy = height / bg.height;
       bg.setScale(Math.max(sx, sy));
     }
-    this.add.text(width/2, height/2 - 120, 'Dino Clone', { fontFamily: 'Minecraft, Arial', fontSize: '48px', color: '#ffffff' }).setOrigin(0.5);
+    this.add.text(width/2, height/2 - 120, "Amelio's Farm", { fontFamily: 'Minecraft, Arial', fontSize: '48px', color: '#ffffff' }).setOrigin(0.5);
 
     this.createButton(width/2, height/2, 'Iniciar Jogo', () => this.scene.start('Game'));
     this.createButton(width/2, height/2 + 70, 'Pontuações', () => this.scene.start('Scores'));

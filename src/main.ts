@@ -5,15 +5,15 @@ import { MenuScene } from './scenes/MenuScene';
 import { GameScene } from './scenes/GameScene';
 import { ScoreScene } from './scenes/ScoreScene';
 
-const width = 960;
-const height = 540;
+const width = window.innerWidth;
+const height = window.innerHeight;
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'app',
   width,
   height,
-  backgroundColor: '#ffffff',
+  backgroundColor: '#87ceeb',
   physics: {
     default: 'arcade',
     arcade: {
@@ -22,10 +22,8 @@ const config: Phaser.Types.Core.GameConfig = {
     }
   },
   scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width,
-    height
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH
   },
   scene: [BootScene, PreloadScene, MenuScene, GameScene, ScoreScene]
 };
