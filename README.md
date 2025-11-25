@@ -23,16 +23,24 @@ npm run preview
 ```
 
 ## Painel de Status do Servidor
-Novo painel para gerenciar o servidor de desenvolvimento (start/stop/restart) e ver o link:
+Você pode abrir um painel sem digitar comandos no terminal usando o arquivo de atalho Windows:
+
+1. Dê duplo clique em `AbrirPainel.bat` na raiz do projeto.
+2. O batch inicia o servidor de controle e abre automaticamente o painel em `http://localhost:5555/status.html`.
+3. Use os botões: Iniciar / Parar / Reiniciar / Atualizar.
+
+Scripts equivalentes (opcional):
 ```powershell
 npm run control
 ```
-Acesse: `http://localhost:5555/status.html`.
 Endpoints disponíveis:
 - `GET /api/status`
 - `POST /api/start`
 - `POST /api/stop`
 - `POST /api/restart`
+
+### Limitação técnica
+Abrir apenas um arquivo HTML (ex.: `status.html` via file://) não permite iniciar/parar processos Node porque o navegador em modo local não tem acesso a APIs de sistema. Por isso usamos um batch para subir o processo e então acessar a página.
 
 ## Erros comuns
 - CORS ao abrir `index.html` direto (file://): execute via servidor.
