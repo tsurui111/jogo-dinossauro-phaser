@@ -29,12 +29,10 @@ export class PreloadScene extends Phaser.Scene {
     // Imagens do manifest
     assetManager.preloadStatic(this);
     // Fonte TTF (Minecraft.ttf)
-    // Requer Phaser >= 3.87
     this.load.font('Minecraft', '/assets/fonts/Minecraft.ttf', 'truetype');
   }
 
   async create() {
-    await assetManager.loadGifs(this);
     this.scene.start('Menu');
   }
 }

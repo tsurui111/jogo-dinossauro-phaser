@@ -2,14 +2,14 @@
   "bg1": { "type": "image", "src": "/assets/backgrounds/bg1.png" },
   "bg2": { "type": "image", "src": "/assets/backgrounds/bg2.png" },
 
-  "player_run": { "type": "gif", "src": "/assets/sprites/corrida.gif", "frameRate": 12 },
-  "player_jump": { "type": "gif", "src": "/assets/sprites/pulo.gif", "frameRate": 12 },
+  "player_run": { "type": "image", "src": "/assets/sprites/corrida.gif" },
+  "player_jump": { "type": "image", "src": "/assets/sprites/pulo.gif" },
   "player_dead": { "type": "image", "src": "/assets/sprites/morte.png" },
 
-  "enemy_larva": { "type": "gif", "src": "/assets/enemies/larva.gif", "frameRate": 12 },
-  "enemy_percevejo": { "type": "gif", "src": "/assets/enemies/percevejo.gif", "frameRate": 12 },
-  "enemy_mosca": { "type": "gif", "src": "/assets/enemies/mosca.gif", "frameRate": 12 },
+  "enemy_larva": { "type": "image", "src": "/assets/enemies/larva.gif" },
+  "enemy_percevejo": { "type": "image", "src": "/assets/enemies/percevejo.gif" },
+  "enemy_mosca": { "type": "image", "src": "/assets/enemies/mosca.gif" },
 
   "col_certificado": { "type": "image", "src": "/assets/collectibles/certificado.png" },
-  "col_soja": { "type": "gif", "src": "/assets/collectibles/soja_supreme.gif", "frameRate": 12 }
+  "col_soja": { "type": "image", "src": "/assets/collectibles/soja_supreme.gif" }
 }

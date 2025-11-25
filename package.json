@@ -5,12 +5,11 @@
   "type": "module",
   "scripts": {
     "sync:assets": "cpx \"assets/**/*\" \"public/assets\"",
-    "dev": "npm run sync:assets; vite",
-    "build": "npm run sync:assets; tsc -b && vite build",
+    "dev": "npm run sync:assets && vite",
+    "build": "npm run sync:assets && tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "gifuct-js": "^2.1.2",
     "phaser": "^3.90.0"
   },
   "devDependencies": {

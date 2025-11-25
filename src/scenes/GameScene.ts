@@ -1,11 +1,10 @@
 import Phaser from 'phaser';
-import { assetManager } from '../assets/AssetManager';
 import { addHighScore } from './ScoreScene';
 
 type Obstacle = Phaser.Types.Physics.Arcade.ImageWithDynamicBody | Phaser.GameObjects.Rectangle & { body: Phaser.Physics.Arcade.Body };
 
 export class GameScene extends Phaser.Scene {
-  private player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | Phaser.GameObjects.Rectangle & { body: Phaser.Physics.Arcade.Body };
+  private player!: Phaser.Types.Physics.Arcade.ImageWithDynamicBody | Phaser.GameObjects.Rectangle & { body: Phaser.Physics.Arcade.Body };
   private ground!: Phaser.GameObjects.TileSprite;
   private groundBody!: Phaser.GameObjects.Rectangle & { body: Phaser.Physics.Arcade.StaticBody };
   private obstacles!: Phaser.Physics.Arcade.Group;
@@ -29,10 +28,8 @@ export class GameScene extends Phaser.Scene {
     this.speed = 450;
 
     this.cameras.main.setBackgroundColor('#87ceeb');
-    // Background alternando entre bg1 e bg2
     this.createAlternatingBackgrounds();
 
-    // Create a small canvas texture for ground tiling
     const groundCanvas = document.createElement('canvas');
     groundCanvas.width = 64; groundCanvas.height = 40;
     const gctx = groundCanvas.getContext('2d')!;
@@ -43,7 +40,6 @@ export class GameScene extends Phaser.Scene {
     this.textures.addCanvas('ground', groundCanvas);
     this.ground = this.add.tileSprite(0, height - 40, width * 2, 40, 'ground').setOrigin(0, 0);
 
-    // Invisible physics ground
     const gr = this.add.rectangle(width/2, height - 20, width, 40, 0xffffff, 0) as any;
     this.physics.add.existing(gr, true);
     this.groundBody = gr as any;
@@ -51,14 +47,8 @@ export class GameScene extends Phaser.Scene {
     this.obstacles = this.physics.add.group();
     this.collectibles = this.physics.add.group();
 
-    const runAnim = assetManager.getAnimationKeyFor('player_run');
-    if (runAnim) {
-      const spr = this.physics.add.sprite(120, height - 80, undefined as any);
-      spr.play(runAnim);
-      spr.setSize(44, 60).setOffset(0, 0);
-      this.player = spr as any;
-    } else if (this.textures.exists('player_dead')) {
-      const img = this.physics.add.image(120, height - 80, 'player_dead');
+    if (this.textures.exists('player_run')) {
+      const img = this.physics.add.image(120, height - 80, 'player_run');
       img.setCircle(Math.min(img.width, img.height) / 2);
       this.player = img as any;
     } else {
@@ -87,33 +77,21 @@ export class GameScene extends Phaser.Scene {
 
   update(time: number, dt: number) {
     if (this.isGameOver) return;
-    const { height } = this.scale;
 
-    // Ground scroll
     this.ground.tilePositionX += (this.speed * dt) / 1000;
     this.scrollBackgrounds(dt);
 
-    // Player controls
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const onGround = body.blocked.down || body.touching.down;
     if (Phaser.Input.Keyboard.JustDown(this.jumpKey) && onGround) {
       body.setVelocityY(-860);
-      const jumpAnim = assetManager.getAnimationKeyFor('player_jump');
-      if (jumpAnim && (this.player as any).anims) (this.player as Phaser.GameObjects.Sprite).anims.play(jumpAnim, true);
     }
     if (this.duckKey.isDown && onGround) {
       body.setSize(body.width, 36, true);
     } else {
       body.setSize(body.width, 60, true);
     }
-    // Volta animação de corrida ao tocar o chão
-    if (onGround && (this.player as any).anims) {
-      const current = (this.player as Phaser.GameObjects.Sprite).anims.currentAnim?.key;
-      const run = assetManager.getAnimationKeyFor('player_run');
-      if (run && current !== run) (this.player as Phaser.GameObjects.Sprite).anims.play(run, true);
-    }
 
-    // Move obstacles/collectibles and clean up
     const moveLeft = (obj: Phaser.GameObjects.GameObject & { body?: Phaser.Physics.Arcade.Body }) => {
       const b = obj.body!;
       b.setVelocityX(-this.speed);
@@ -122,7 +100,6 @@ export class GameScene extends Phaser.Scene {
     this.obstacles.getChildren().forEach(o => moveLeft(o as any));
     this.collectibles.getChildren().forEach(c => moveLeft(c as any));
 
-    // Score and speed ramp
     this.score += (dt / 1000) * 5;
     this.scoreText.setText(Math.floor(this.score).toString());
     this.speed = 450 + Math.floor(this.score / 30) * 30;
@@ -130,22 +107,13 @@ export class GameScene extends Phaser.Scene {
 
   private spawnEnemy() {
     const { height, width } = this.scale;
-    // Probabilidades: 40% larva, 40% percevejo (terrestres), 20% mosca (aéreo)
     const r = Math.random();
     let key: string;
     if (r < 0.4) key = 'enemy_larva';
     else if (r < 0.8) key = 'enemy_percevejo';
     else key = 'enemy_mosca';
-
-    const animKey = assetManager.getAnimationKeyFor(key);
     const y = key === 'enemy_mosca' ? Phaser.Math.Between(160, height - 260) : height - 80;
-    let obj: any;
-    if (animKey) {
-      obj = this.physics.add.sprite(width + 40, y, undefined as any);
-      obj.play(animKey);
-    } else {
-      obj = this.physics.add.image(width + 40, y, key);
-    }
+    const obj = this.physics.add.image(width + 40, y, key);
     obj.body.setImmovable(true);
     obj.body.setAllowGravity(false);
     this.obstacles.add(obj);
@@ -153,15 +121,10 @@ export class GameScene extends Phaser.Scene {
 
   private spawnCollectible() {
     const y = Phaser.Math.Between(150, this.scale.height - 200);
-    // 70% certificado (poucos pontos), 30% soja_supreme (raros, mais pontos)
     const rare = Math.random() < 0.3;
     const key = rare ? 'col_soja' : 'col_certificado';
-    const animKey = assetManager.getAnimationKeyFor(key);
     let col: any;
-    if (animKey) {
-      col = this.physics.add.sprite(this.scale.width + 40, y, undefined as any);
-      col.play(animKey);
-    } else if (this.textures.exists(key)) {
+    if (this.textures.exists(key)) {
       col = this.physics.add.image(this.scale.width + 40, y, key);
     } else {
       const rect = this.add.rectangle(this.scale.width + 40, y, 20, 20, rare ? 0x00ff66 : 0xffcc00) as any;
@@ -193,10 +156,8 @@ export class GameScene extends Phaser.Scene {
     this.add.text(width/2, height/2 + 80, 'Voltar ao Menu', { fontFamily: 'Arial', fontSize: '22px', color: '#fff' }).setOrigin(0.5);
     btn.on('pointerdown', () => this.scene.start('Menu'));
     overlay.depth = 1000;
-    // Troca sprite do player para "morte" se disponível
-    if ((this.player as any).anims) (this.player as Phaser.GameObjects.Sprite).anims.stop();
     if (this.textures.exists('player_dead')) {
-      (this.player as Phaser.GameObjects.Sprite).setTexture('player_dead');
+      (this.player as Phaser.GameObjects.Image).setTexture('player_dead');
     }
   }
 
@@ -212,9 +173,8 @@ export class GameScene extends Phaser.Scene {
     };
     this.bgA = makeBg('bg1') as any;
     this.bgB = makeBg('bg2') as any;
-    // Posiciona lado a lado para scroll infinito
-    (this.bgA as any).x = 0; (this.bgB as any).x = (this.bgA as any).displayWidth;
-    this.nextBgIs1 = false; // próximo que entra à direita começa alternando
+    this.bgA.x = 0; this.bgB.x = (this.bgA as any).displayWidth;
+    this.nextBgIs1 = false;
   }
 
   private scrollBackgrounds(dt: number) {
