@@ -22,6 +22,18 @@ npm run build
 npm run preview
 ```
 
+## Painel de Status do Servidor
+Novo painel para gerenciar o servidor de desenvolvimento (start/stop/restart) e ver o link:
+```powershell
+npm run control
+```
+Acesse: `http://localhost:5555/status.html`.
+Endpoints disponíveis:
+- `GET /api/status`
+- `POST /api/start`
+- `POST /api/stop`
+- `POST /api/restart`
+
 ## Erros comuns
 - CORS ao abrir `index.html` direto (file://): execute via servidor.
   - Desenvolvimento:
@@ -36,7 +48,7 @@ npm run preview
 
 ## Tela Cheia
 - O jogo usa `Phaser.Scale.RESIZE` e CSS para ocupar 100% da viewport.
-- Ajustes de layout usam `this.scale.width/height`; evite abrir direto via `file://`.
+- Ajustes de layout usam `this.scale.width/height`.
 
 ## Sistema de Assets
 - Arquivo: `public/assets/manifest.json` (gerado a partir da pasta raiz `assets/`)

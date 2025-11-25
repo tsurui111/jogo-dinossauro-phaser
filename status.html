@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<title>Status - Amelio's Farm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f0f4f8; color:#222; }
+  h1 { margin-top:0; }
+  .card { background:#fff; padding:16px 20px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,.1); max-width:480px; }
+  button { cursor:pointer; padding:10px 18px; margin:4px 6px 0 0; border:0; border-radius:6px; font-size:14px; background:#2563eb; color:#fff; box-shadow:0 1px 2px rgba(0,0,0,.15); }
+  button.secondary { background:#475569; }
+  button.danger { background:#dc2626; }
+  button:disabled { background:#94a3b8; cursor:not-allowed; }
+  code { background:#e2e8f0; padding:2px 6px; border-radius:4px; }
+  .status { font-weight:600; }
+  .running { color:#059669; }
+  .stopped { color:#dc2626; }
+  footer { margin-top:32px; font-size:12px; opacity:.7; }
+</style>
+</head>
+<body>
+  <h1>Amelio's Farm - Status do Servidor</h1>
+  <div class="card">
+    <p>Estado: <span id="state" class="status">...</span></p>
+    <p>PID: <span id="pid">-</span></p>
+    <p>Link do jogo: <span id="link">(não iniciado)</span></p>
+    <div>
+      <button id="startBtn">Iniciar</button>
+      <button id="restartBtn" class="secondary">Reiniciar</button>
+      <button id="stopBtn" class="danger">Parar</button>
+      <button id="refreshBtn" class="secondary">Atualizar</button>
+    </div>
+  </div>
+  <footer>Use <code>npm run control</code> para iniciar este painel (porta 5555).</footer>
+<script>
+const API = '';
+const els = {
+  state: document.getElementById('state'),
+  pid: document.getElementById('pid'),
+  link: document.getElementById('link'),
+  start: document.getElementById('startBtn'),
+  restart: document.getElementById('restartBtn'),
+  stop: document.getElementById('stopBtn'),
+  refresh: document.getElementById('refreshBtn')
+};
+async function status() {
+  try {
+    const r = await fetch(API + '/api/status');
+    const j = await r.json();
+    els.state.textContent = j.running ? 'Rodando' : 'Parado';
+    els.state.className = 'status ' + (j.running ? 'running' : 'stopped');
+    els.pid.textContent = j.pid || '-';
+    if (j.running && j.url) {
+      els.link.innerHTML = `<a href="${j.url}" target="_blank">${j.url}</a>`;
+    } else {
+      els.link.textContent = '(não iniciado)';
+    }
+    els.start.disabled = j.running;
+    els.restart.disabled = !j.running;
+    els.stop.disabled = !j.running;
+  } catch (e) {
+    els.state.textContent = 'Erro ao consultar';
+    els.state.className = 'status stopped';
+  }
+}
+async function call(ep) {
+  await fetch(API + ep, { method:'POST' });
+  setTimeout(status, 600);
+}
+els.start.onclick = () => call('/api/start');
+els.restart.onclick = () => call('/api/restart');
+els.stop.onclick = () => call('/api/stop');
+els.refresh.onclick = status;
+status();
+setInterval(status, 5000);
+</script>
+</body>
+</html>

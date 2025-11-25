@@ -7,7 +7,8 @@
     "sync:assets": "cpx \"assets/**/*\" \"public/assets\"",
     "dev": "npm run sync:assets && vite",
     "build": "npm run sync:assets && tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "control": "node server/controlServer.js"
   },
   "dependencies": {
     "phaser": "^3.90.0"
